@@ -1,8 +1,9 @@
 # KES Ops
 
 Internal management app for KES Cafe — orders, running costs, and profit.
-Separate from the public marketing site but lives in the same repo (`frontend/ops`).
-Login only, no registration. Vietnamese UI, mobile-first.
+Standalone app in its own repo, deployed as its own Vercel project (separate
+from the public marketing site). Login only, no registration. Vietnamese UI,
+mobile-first.
 
 ## Stack
 
@@ -22,7 +23,7 @@ counted per drink via giá vốn, so logging it again would double-count.
 ## Local development
 
 ```bash
-cd frontend/ops
+cd kes-ops
 npm install
 cp .env.example .env.local     # then fill in DATABASE_URL + SESSION_SECRET
 npm run db:migrate             # create tables in Neon
@@ -45,36 +46,20 @@ Login: `kescafe2026` / `Kes2026@` (single shared account, seeded).
 - `npm run db:migrate` — apply migrations · `db:push` — push schema directly
 - `npm run db:seed` — idempotent (users upserted; products only seeded when empty)
 
-## Deploy — served at kescafe.vercel.app/ops (Multi-Zone)
+## Deploy (own repo + own Vercel project)
 
-This app is a **Next.js Multi-Zone**: its own Vercel deployment (with
-`basePath: "/ops"`), surfaced under `/ops` of the marketing site via a rewrite.
-The two stay isolated — an ops build failure can't take the public site down.
+This is a standalone app in its own git repo, served at its own domain root.
 
-**Step 1 — deploy the ops app (its own Vercel project)**
-
-1. Vercel → **Add New Project** → import the **same repo** (`KES-Frontend`).
-2. **Root Directory** → `ops`. Framework auto-detects as Next.js.
-3. **Environment Variables** → `DATABASE_URL` (same Neon string) +
+1. Push this repo to GitHub (e.g. a new `KES-Ops` repo).
+2. Vercel → **Add New Project** → import that repo. **Root Directory** = repo
+   root (default); framework auto-detects as Next.js.
+3. **Environment Variables** → `DATABASE_URL` (Neon pooled string) +
    `SESSION_SECRET`. Deploy.
-4. Note the deployment URL, e.g. `https://kescafe-ops.vercel.app`. Visiting its
-   root 404s by design — the app lives under `/ops` (basePath).
+4. The app is live at `https://<project>.vercel.app` (log in at `/login`).
+   Add a custom domain later under the project's Domains if you want.
 
-**Step 2 — route /ops from the marketing site**
-
-5. In the **marketing** Vercel project → Settings → Environment Variables → add
-   `OPS_ORIGIN = https://kescafe-ops.vercel.app` (the Step-1 URL, no trailing
-   slash). Redeploy the marketing project.
-6. Done: `https://kescafe.vercel.app/ops` now serves this app.
-
-**Notes**
-
-- The DB is already migrated + seeded (same Neon) — no post-deploy DB step.
-- `next.config.ts` here lists the marketing origin in
-  `serverActions.allowedOrigins` (server actions arrive via the proxy). If the
-  marketing site moves to a custom domain, add that domain there too.
-- The marketing project never builds `ops/` (`.vercelignore` + tsconfig/eslint/
-  vitest excludes), so the two builds are independent.
+The DB is already migrated + seeded on Neon, so there's no post-deploy DB step.
+Fully independent of the marketing site — separate repo, separate build.
 
 ## First run
 
