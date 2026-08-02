@@ -23,7 +23,7 @@ export function vnDateStr(d: Date): string {
 }
 
 export interface PeriodRange {
-  key: PeriodKey;
+  key: PeriodKey | "day";
   /** Order timestamps: startUtc <= createdAt < endUtc. */
   startUtc: Date;
   endUtc: Date;
@@ -70,5 +70,20 @@ export function computePeriod(
     startDateStr: buckets[0].dateStr,
     endDateStr: buckets[buckets.length - 1].dateStr,
     buckets,
+  };
+}
+
+/** Range for one specific VN day (YYYY-MM-DD) — used by the dashboard date picker. */
+export function computeDay(dateStr: string): PeriodRange {
+  const [y, m, d] = dateStr.split("-").map(Number);
+  const startShift = new Date(Date.UTC(y, m - 1, d));
+  const endShiftExclusive = new Date(Date.UTC(y, m - 1, d + 1));
+  return {
+    key: "day",
+    startUtc: new Date(startShift.getTime() - VN_OFFSET_MS),
+    endUtc: new Date(endShiftExclusive.getTime() - VN_OFFSET_MS),
+    startDateStr: dateStr,
+    endDateStr: dateStr,
+    buckets: [{ dateStr, label: `${pad(d)}/${pad(m)}` }],
   };
 }

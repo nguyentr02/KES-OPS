@@ -1,10 +1,17 @@
 import { and, desc, gte, inArray, lt, lte } from "drizzle-orm";
 import Link from "next/link";
 
+import { DateFilter } from "@/components/dashboard/date-filter";
 import { db } from "@/db";
 import { expenses, orderItems, orders } from "@/db/schema";
 import { formatVnd } from "@/lib/format";
-import { computePeriod, PERIODS, type PeriodKey, vnDateStr } from "@/lib/period";
+import {
+  computeDay,
+  computePeriod,
+  PERIODS,
+  type PeriodKey,
+  vnDateStr,
+} from "@/lib/period";
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -16,11 +23,20 @@ function isPeriodKey(v: string | undefined): v is PeriodKey {
 export default async function DashboardPage({
   searchParams,
 }: {
-  searchParams: Promise<{ period?: string }>;
+  searchParams: Promise<{ period?: string; date?: string }>;
 }) {
   const sp = await searchParams;
-  const period: PeriodKey = isPeriodKey(sp.period) ? sp.period : "today";
-  const range = computePeriod(period);
+  // A specific ?date=YYYY-MM-DD wins over the period tabs.
+  const dateParam =
+    typeof sp.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(sp.date)
+      ? sp.date
+      : null;
+  const period: PeriodKey | null = dateParam
+    ? null
+    : isPeriodKey(sp.period)
+      ? sp.period
+      : "today";
+  const range = dateParam ? computeDay(dateParam) : computePeriod(period!);
 
   const orderRows = await db
     .select({
@@ -100,22 +116,25 @@ export default async function DashboardPage({
         Tổng quan
       </h1>
 
-      {/* Period tabs */}
-      <div className="mt-4 inline-flex rounded-lg border border-border/60 bg-card p-1">
-        {PERIODS.map((p) => (
-          <Link
-            key={p.key}
-            href={`/?period=${p.key}`}
-            className={cn(
-              "rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
-              p.key === period
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:text-foreground",
-            )}
-          >
-            {p.label}
-          </Link>
-        ))}
+      {/* Period tabs + single-day picker */}
+      <div className="mt-4 flex flex-wrap items-center gap-3">
+        <div className="inline-flex rounded-lg border border-border/60 bg-card p-1">
+          {PERIODS.map((p) => (
+            <Link
+              key={p.key}
+              href={`/?period=${p.key}`}
+              className={cn(
+                "rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
+                p.key === period
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              {p.label}
+            </Link>
+          ))}
+        </div>
+        <DateFilter value={dateParam} />
       </div>
 
       {/* Net profit — the headline */}
