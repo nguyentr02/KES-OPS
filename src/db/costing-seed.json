@@ -1,0 +1,935 @@
+{
+  "ingredients": [
+    {
+      "name": "Mayaca M4",
+      "unit": "g",
+      "packSize": 455.0,
+      "purchasePrice": 122400.0
+    },
+    {
+      "name": "Mayaca M5",
+      "unit": "g",
+      "packSize": 455.0,
+      "purchasePrice": 190800.0
+    },
+    {
+      "name": "Mayaca S1",
+      "unit": "g",
+      "packSize": 500.0,
+      "purchasePrice": 51600.0
+    },
+    {
+      "name": "Cacao",
+      "unit": "g",
+      "packSize": 500.0,
+      "purchasePrice": 85000.0
+    },
+    {
+      "name": "Matcha",
+      "unit": "g",
+      "packSize": 100.0,
+      "purchasePrice": 145000.0
+    },
+    {
+      "name": "Twinings thiếc vàng",
+      "unit": "g",
+      "packSize": 1.0,
+      "purchasePrice": 0.0
+    },
+    {
+      "name": "Tonic (ml)",
+      "unit": "ml",
+      "packSize": 1920.0,
+      "purchasePrice": 45600.0
+    },
+    {
+      "name": "Sữa đặc (ml)",
+      "unit": "ml",
+      "packSize": 15400.0,
+      "purchasePrice": 765000.0
+    },
+    {
+      "name": "Sữa hạt (ml)",
+      "unit": "ml",
+      "packSize": 6000.0,
+      "purchasePrice": 228000.0
+    },
+    {
+      "name": "Whipping (ml)",
+      "unit": "ml",
+      "packSize": 1000.0,
+      "purchasePrice": 163000.0
+    },
+    {
+      "name": "Icehot (ml)",
+      "unit": "ml",
+      "packSize": 1000.0,
+      "purchasePrice": 75000.0
+    },
+    {
+      "name": "Bơ đậu phộng (g)",
+      "unit": "g",
+      "packSize": 380.0,
+      "purchasePrice": 98000.0
+    },
+    {
+      "name": "Đường (g)",
+      "unit": "g",
+      "packSize": 10000.0,
+      "purchasePrice": 195000.0
+    },
+    {
+      "name": "Muối (g)",
+      "unit": "g",
+      "packSize": 450.0,
+      "purchasePrice": 6100.0
+    },
+    {
+      "name": "Chanh vàng",
+      "unit": "g",
+      "packSize": 700.0,
+      "purchasePrice": 75000.0
+    },
+    {
+      "name": "Cam cam",
+      "unit": "ml",
+      "packSize": 1000.0,
+      "purchasePrice": 39000.0
+    },
+    {
+      "name": "Đá",
+      "unit": "g",
+      "packSize": 5000.0,
+      "purchasePrice": 10000.0
+    },
+    {
+      "name": "Ly + nắp + ống + túi (S)",
+      "unit": "Set (12oz - 360ml)",
+      "packSize": 1000.0,
+      "purchasePrice": 1316800.0
+    },
+    {
+      "name": "Ly + nắp + ống + túi (M)",
+      "unit": "Set (16oz - 500ml)",
+      "packSize": 1000.0,
+      "purchasePrice": 1531800.0
+    },
+    {
+      "name": "Chai",
+      "unit": "1 chai",
+      "packSize": 50.0,
+      "purchasePrice": 375000.0
+    }
+  ],
+  "components": [
+    {
+      "name": "Cà phê cốt (ml)",
+      "unit": "ml",
+      "yield": 250.0,
+      "lines": [
+        {
+          "ingredient": "Mayaca S1",
+          "qty": 100.0
+        }
+      ]
+    },
+    {
+      "name": "Kem muối (ml)",
+      "unit": "ml",
+      "yield": 70.0,
+      "lines": [
+        {
+          "ingredient": "Whipping (ml)",
+          "qty": 20.0
+        },
+        {
+          "ingredient": "Icehot (ml)",
+          "qty": 20.0
+        },
+        {
+          "ingredient": "Sữa đặc (ml)",
+          "qty": 20.0
+        },
+        {
+          "ingredient": "Muối (g)",
+          "qty": 1.0
+        }
+      ]
+    },
+    {
+      "name": "Kem bơ đậu (ml)",
+      "unit": "ml",
+      "yield": 60.0,
+      "lines": [
+        {
+          "ingredient": "Whipping (ml)",
+          "qty": 20.0
+        },
+        {
+          "ingredient": "Icehot (ml)",
+          "qty": 10.0
+        },
+        {
+          "ingredient": "Sữa đặc (ml)",
+          "qty": 20.0
+        },
+        {
+          "ingredient": "Bơ đậu phộng (g)",
+          "qty": 10.0
+        }
+      ]
+    },
+    {
+      "name": "Cold brew cốt (ml)",
+      "unit": "ml",
+      "yield": 1000.0,
+      "lines": [
+        {
+          "ingredient": "Mayaca M4",
+          "qty": 20.0
+        },
+        {
+          "ingredient": "Mayaca M5",
+          "qty": 80.0
+        }
+      ]
+    },
+    {
+      "name": "Nước cam (ml)",
+      "unit": "ml",
+      "yield": 600.0,
+      "lines": [
+        {
+          "ingredient": "Cam cam",
+          "qty": 2000.0
+        }
+      ]
+    },
+    {
+      "name": "Sirup chanh (ml)",
+      "unit": "ml",
+      "yield": 900.0,
+      "lines": [
+        {
+          "ingredient": "Chanh vàng",
+          "qty": 700.0
+        },
+        {
+          "ingredient": "Đường (g)",
+          "qty": 580.0
+        }
+      ]
+    },
+    {
+      "name": "Trà (ml)",
+      "unit": "ml",
+      "yield": 300.0,
+      "lines": [
+        {
+          "ingredient": "Twinings thiếc vàng",
+          "qty": 2.0
+        }
+      ]
+    },
+    {
+      "name": "Kem béo (ml)",
+      "unit": "ml",
+      "yield": 60.0,
+      "lines": [
+        {
+          "ingredient": "Whipping (ml)",
+          "qty": 10.0
+        },
+        {
+          "ingredient": "Icehot (ml)",
+          "qty": 20.0
+        },
+        {
+          "ingredient": "Sữa đặc (ml)",
+          "qty": 10.0
+        }
+      ]
+    },
+    {
+      "name": "Nước đường (ml)",
+      "unit": "ml",
+      "yield": 150.0,
+      "lines": [
+        {
+          "ingredient": "Đường (g)",
+          "qty": 100.0
+        }
+      ]
+    }
+  ],
+  "recipes": [
+    {
+      "product": "Cà Phê Đen",
+      "size": "S",
+      "lines": [
+        {
+          "ref": "Cà phê cốt (ml)",
+          "type": "component",
+          "qty": 50.0
+        },
+        {
+          "ref": "Nước đường (ml)",
+          "type": "component",
+          "qty": 10.0
+        },
+        {
+          "ref": "Ly + nắp + ống + túi (S)",
+          "type": "ingredient",
+          "qty": 1.0
+        },
+        {
+          "ref": "Đá",
+          "type": "ingredient",
+          "qty": 100.0
+        }
+      ]
+    },
+    {
+      "product": "Cà Phê Đen",
+      "size": "M",
+      "lines": [
+        {
+          "ref": "Cà phê cốt (ml)",
+          "type": "component",
+          "qty": 70.0
+        },
+        {
+          "ref": "Nước đường (ml)",
+          "type": "component",
+          "qty": 20.0
+        },
+        {
+          "ref": "Ly + nắp + ống + túi (M)",
+          "type": "ingredient",
+          "qty": 1.0
+        },
+        {
+          "ref": "Đá",
+          "type": "ingredient",
+          "qty": 100.0
+        }
+      ]
+    },
+    {
+      "product": "Cà Phê Sữa SG",
+      "size": "S",
+      "lines": [
+        {
+          "ref": "Cà phê cốt (ml)",
+          "type": "component",
+          "qty": 50.0
+        },
+        {
+          "ref": "Sữa đặc (ml)",
+          "type": "ingredient",
+          "qty": 30.0
+        },
+        {
+          "ref": "Ly + nắp + ống + túi (S)",
+          "type": "ingredient",
+          "qty": 1.0
+        },
+        {
+          "ref": "Đá",
+          "type": "ingredient",
+          "qty": 100.0
+        }
+      ]
+    },
+    {
+      "product": "Cà Phê Sữa SG",
+      "size": "M",
+      "lines": [
+        {
+          "ref": "Cà phê cốt (ml)",
+          "type": "component",
+          "qty": 70.0
+        },
+        {
+          "ref": "Sữa đặc (ml)",
+          "type": "ingredient",
+          "qty": 40.0
+        },
+        {
+          "ref": "Ly + nắp + ống + túi (M)",
+          "type": "ingredient",
+          "qty": 1.0
+        },
+        {
+          "ref": "Đá",
+          "type": "ingredient",
+          "qty": 100.0
+        }
+      ]
+    },
+    {
+      "product": "Cà Phê Muối",
+      "size": "S",
+      "lines": [
+        {
+          "ref": "Cà phê cốt (ml)",
+          "type": "component",
+          "qty": 40.0
+        },
+        {
+          "ref": "Sữa đặc (ml)",
+          "type": "ingredient",
+          "qty": 20.0
+        },
+        {
+          "ref": "Kem muối (ml)",
+          "type": "component",
+          "qty": 30.0
+        },
+        {
+          "ref": "Ly + nắp + ống + túi (S)",
+          "type": "ingredient",
+          "qty": 1.0
+        },
+        {
+          "ref": "Đá",
+          "type": "ingredient",
+          "qty": 100.0
+        }
+      ]
+    },
+    {
+      "product": "Cà Phê Muối",
+      "size": "M",
+      "lines": [
+        {
+          "ref": "Cà phê cốt (ml)",
+          "type": "component",
+          "qty": 70.0
+        },
+        {
+          "ref": "Sữa đặc (ml)",
+          "type": "ingredient",
+          "qty": 30.0
+        },
+        {
+          "ref": "Kem muối (ml)",
+          "type": "component",
+          "qty": 40.0
+        },
+        {
+          "ref": "Ly + nắp + ống + túi (M)",
+          "type": "ingredient",
+          "qty": 1.0
+        },
+        {
+          "ref": "Đá",
+          "type": "ingredient",
+          "qty": 100.0
+        }
+      ]
+    },
+    {
+      "product": "Cà Phê Kem Bơ Đậu Phộng",
+      "size": "S",
+      "lines": [
+        {
+          "ref": "Cà phê cốt (ml)",
+          "type": "component",
+          "qty": 30.0
+        },
+        {
+          "ref": "Sữa đặc (ml)",
+          "type": "ingredient",
+          "qty": 20.0
+        },
+        {
+          "ref": "Whipping (ml)",
+          "type": "ingredient",
+          "qty": 10.0
+        },
+        {
+          "ref": "Icehot (ml)",
+          "type": "ingredient",
+          "qty": 20.0
+        },
+        {
+          "ref": "Bơ đậu phộng (g)",
+          "type": "ingredient",
+          "qty": 10.0
+        },
+        {
+          "ref": "Ly + nắp + ống + túi (S)",
+          "type": "ingredient",
+          "qty": 1.0
+        },
+        {
+          "ref": "Đá",
+          "type": "ingredient",
+          "qty": 100.0
+        }
+      ]
+    },
+    {
+      "product": "Cà Phê Kem Bơ Đậu Phộng",
+      "size": "M",
+      "lines": [
+        {
+          "ref": "Cà phê cốt (ml)",
+          "type": "component",
+          "qty": 50.0
+        },
+        {
+          "ref": "Sữa đặc (ml)",
+          "type": "ingredient",
+          "qty": 30.0
+        },
+        {
+          "ref": "Whipping (ml)",
+          "type": "ingredient",
+          "qty": 10.0
+        },
+        {
+          "ref": "Icehot (ml)",
+          "type": "ingredient",
+          "qty": 30.0
+        },
+        {
+          "ref": "Bơ đậu phộng (g)",
+          "type": "ingredient",
+          "qty": 15.0
+        },
+        {
+          "ref": "Ly + nắp + ống + túi (M)",
+          "type": "ingredient",
+          "qty": 1.0
+        },
+        {
+          "ref": "Đá",
+          "type": "ingredient",
+          "qty": 100.0
+        }
+      ]
+    },
+    {
+      "product": "Bạc Xỉu",
+      "size": "S",
+      "lines": [
+        {
+          "ref": "Cà phê cốt (ml)",
+          "type": "component",
+          "qty": 30.0
+        },
+        {
+          "ref": "Sữa đặc (ml)",
+          "type": "ingredient",
+          "qty": 30.0
+        },
+        {
+          "ref": "Sữa hạt (ml)",
+          "type": "ingredient",
+          "qty": 50.0
+        },
+        {
+          "ref": "Ly + nắp + ống + túi (S)",
+          "type": "ingredient",
+          "qty": 1.0
+        },
+        {
+          "ref": "Đá",
+          "type": "ingredient",
+          "qty": 100.0
+        }
+      ]
+    },
+    {
+      "product": "Bạc Xỉu",
+      "size": "M",
+      "lines": [
+        {
+          "ref": "Cà phê cốt (ml)",
+          "type": "component",
+          "qty": 40.0
+        },
+        {
+          "ref": "Sữa đặc (ml)",
+          "type": "ingredient",
+          "qty": 40.0
+        },
+        {
+          "ref": "Sữa hạt (ml)",
+          "type": "ingredient",
+          "qty": 80.0
+        },
+        {
+          "ref": "Ly + nắp + ống + túi (M)",
+          "type": "ingredient",
+          "qty": 1.0
+        },
+        {
+          "ref": "Đá",
+          "type": "ingredient",
+          "qty": 100.0
+        }
+      ]
+    },
+    {
+      "product": "Bạc Xỉu Muối",
+      "size": "S",
+      "lines": [
+        {
+          "ref": "Cà phê cốt (ml)",
+          "type": "component",
+          "qty": 30.0
+        },
+        {
+          "ref": "Sữa đặc (ml)",
+          "type": "ingredient",
+          "qty": 30.0
+        },
+        {
+          "ref": "Sữa hạt (ml)",
+          "type": "ingredient",
+          "qty": 50.0
+        },
+        {
+          "ref": "Kem muối (ml)",
+          "type": "component",
+          "qty": 30.0
+        },
+        {
+          "ref": "Ly + nắp + ống + túi (S)",
+          "type": "ingredient",
+          "qty": 1.0
+        },
+        {
+          "ref": "Đá",
+          "type": "ingredient",
+          "qty": 100.0
+        }
+      ]
+    },
+    {
+      "product": "Bạc Xỉu Muối",
+      "size": "M",
+      "lines": [
+        {
+          "ref": "Cà phê cốt (ml)",
+          "type": "component",
+          "qty": 40.0
+        },
+        {
+          "ref": "Sữa đặc (ml)",
+          "type": "ingredient",
+          "qty": 40.0
+        },
+        {
+          "ref": "Sữa hạt (ml)",
+          "type": "ingredient",
+          "qty": 80.0
+        },
+        {
+          "ref": "Kem muối (ml)",
+          "type": "component",
+          "qty": 40.0
+        },
+        {
+          "ref": "Ly + nắp + ống + túi (M)",
+          "type": "ingredient",
+          "qty": 1.0
+        },
+        {
+          "ref": "Đá",
+          "type": "ingredient",
+          "qty": 100.0
+        }
+      ]
+    },
+    {
+      "product": "Cold Brew",
+      "size": "S",
+      "lines": [
+        {
+          "ref": "Cold brew cốt (ml)",
+          "type": "component",
+          "qty": 130.0
+        },
+        {
+          "ref": "Ly + nắp + ống + túi (S)",
+          "type": "ingredient",
+          "qty": 1.0
+        },
+        {
+          "ref": "Đá",
+          "type": "ingredient",
+          "qty": 100.0
+        }
+      ]
+    },
+    {
+      "product": "Cold Brew",
+      "size": "M",
+      "lines": [
+        {
+          "ref": "Cold brew cốt (ml)",
+          "type": "component",
+          "qty": 180.0
+        },
+        {
+          "ref": "Ly + nắp + ống + túi (M)",
+          "type": "ingredient",
+          "qty": 1.0
+        },
+        {
+          "ref": "Đá",
+          "type": "ingredient",
+          "qty": 100.0
+        }
+      ]
+    },
+    {
+      "product": "Cold Brew Chai",
+      "size": null,
+      "lines": [
+        {
+          "ref": "Cold brew cốt (ml)",
+          "type": "component",
+          "qty": 220.0
+        },
+        {
+          "ref": "Chai",
+          "type": "ingredient",
+          "qty": 1.0
+        }
+      ]
+    },
+    {
+      "product": "Cold Brew Chanh Vàng",
+      "size": "S",
+      "lines": [
+        {
+          "ref": "Cold brew cốt (ml)",
+          "type": "component",
+          "qty": 130.0
+        },
+        {
+          "ref": "Sirup chanh (ml)",
+          "type": "component",
+          "qty": 20.0
+        },
+        {
+          "ref": "Ly + nắp + ống + túi (S)",
+          "type": "ingredient",
+          "qty": 1.0
+        },
+        {
+          "ref": "Đá",
+          "type": "ingredient",
+          "qty": 100.0
+        }
+      ]
+    },
+    {
+      "product": "Cold Brew Chanh Vàng",
+      "size": "M",
+      "lines": [
+        {
+          "ref": "Cold brew cốt (ml)",
+          "type": "component",
+          "qty": 180.0
+        },
+        {
+          "ref": "Sirup chanh (ml)",
+          "type": "component",
+          "qty": 30.0
+        },
+        {
+          "ref": "Ly + nắp + ống + túi (M)",
+          "type": "ingredient",
+          "qty": 1.0
+        },
+        {
+          "ref": "Đá",
+          "type": "ingredient",
+          "qty": 100.0
+        }
+      ]
+    },
+    {
+      "product": "Cold Brew Cam",
+      "size": "S",
+      "lines": [
+        {
+          "ref": "Cold brew cốt (ml)",
+          "type": "component",
+          "qty": 100.0
+        },
+        {
+          "ref": "Nước đường (ml)",
+          "type": "component",
+          "qty": 10.0
+        },
+        {
+          "ref": "Nước cam (ml)",
+          "type": "component",
+          "qty": 40.0
+        },
+        {
+          "ref": "Ly + nắp + ống + túi (S)",
+          "type": "ingredient",
+          "qty": 1.0
+        },
+        {
+          "ref": "Đá",
+          "type": "ingredient",
+          "qty": 100.0
+        }
+      ]
+    },
+    {
+      "product": "Cold Brew Cam",
+      "size": "M",
+      "lines": [
+        {
+          "ref": "Cold brew cốt (ml)",
+          "type": "component",
+          "qty": 150.0
+        },
+        {
+          "ref": "Nước đường (ml)",
+          "type": "component",
+          "qty": 15.0
+        },
+        {
+          "ref": "Nước cam (ml)",
+          "type": "component",
+          "qty": 50.0
+        },
+        {
+          "ref": "Ly + nắp + ống + túi (M)",
+          "type": "ingredient",
+          "qty": 1.0
+        },
+        {
+          "ref": "Đá",
+          "type": "ingredient",
+          "qty": 100.0
+        }
+      ]
+    },
+    {
+      "product": "Cold Brew Tonic",
+      "size": "S",
+      "lines": [
+        {
+          "ref": "Cold brew cốt (ml)",
+          "type": "component",
+          "qty": 100.0
+        },
+        {
+          "ref": "Sirup chanh (ml)",
+          "type": "component",
+          "qty": 20.0
+        },
+        {
+          "ref": "Tonic (ml)",
+          "type": "ingredient",
+          "qty": 100.0
+        },
+        {
+          "ref": "Ly + nắp + ống + túi (S)",
+          "type": "ingredient",
+          "qty": 1.0
+        },
+        {
+          "ref": "Đá",
+          "type": "ingredient",
+          "qty": 100.0
+        }
+      ]
+    },
+    {
+      "product": "Cold Brew Tonic",
+      "size": "M",
+      "lines": [
+        {
+          "ref": "Cold brew cốt (ml)",
+          "type": "component",
+          "qty": 150.0
+        },
+        {
+          "ref": "Sirup chanh (ml)",
+          "type": "component",
+          "qty": 30.0
+        },
+        {
+          "ref": "Tonic (ml)",
+          "type": "ingredient",
+          "qty": 150.0
+        },
+        {
+          "ref": "Ly + nắp + ống + túi (M)",
+          "type": "ingredient",
+          "qty": 1.0
+        },
+        {
+          "ref": "Đá",
+          "type": "ingredient",
+          "qty": 100.0
+        }
+      ]
+    },
+    {
+      "product": "Trà Chanh Vàng Macchiato",
+      "size": "S",
+      "lines": [
+        {
+          "ref": "Cold brew cốt (ml)",
+          "type": "component",
+          "qty": 130.0
+        },
+        {
+          "ref": "Sirup chanh (ml)",
+          "type": "component",
+          "qty": 10.0
+        },
+        {
+          "ref": "Ly + nắp + ống + túi (S)",
+          "type": "ingredient",
+          "qty": 1.0
+        },
+        {
+          "ref": "Đá",
+          "type": "ingredient",
+          "qty": 100.0
+        }
+      ]
+    },
+    {
+      "product": "Trà Chanh Vàng Macchiato",
+      "size": "M",
+      "lines": [
+        {
+          "ref": "Cold brew cốt (ml)",
+          "type": "component",
+          "qty": 180.0
+        },
+        {
+          "ref": "Sirup chanh (ml)",
+          "type": "component",
+          "qty": 20.0
+        },
+        {
+          "ref": "Ly + nắp + ống + túi (M)",
+          "type": "ingredient",
+          "qty": 1.0
+        },
+        {
+          "ref": "Đá",
+          "type": "ingredient",
+          "qty": 100.0
+        }
+      ]
+    }
+  ]
+}
