@@ -2,6 +2,7 @@ import { desc, inArray } from "drizzle-orm";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 
+import { DeleteOrderButton } from "@/components/orders/delete-order-button";
 import { Button } from "@/components/ui/button";
 import { db } from "@/db";
 import { orderItems, orders } from "@/db/schema";
@@ -73,13 +74,16 @@ export default async function OrdersPage() {
                       </div>
                     )}
                   </div>
-                  <div className="shrink-0 text-right">
-                    <div className="font-semibold tabular-nums">
-                      {formatVnd(o.revenueTotal)}
+                  <div className="flex shrink-0 items-start gap-1">
+                    <div className="text-right">
+                      <div className="font-semibold tabular-nums">
+                        {formatVnd(o.revenueTotal)}
+                      </div>
+                      <div className="text-xs text-muted-foreground tabular-nums">
+                        lãi {formatVnd(profit)}
+                      </div>
                     </div>
-                    <div className="text-xs text-muted-foreground tabular-nums">
-                      lãi {formatVnd(profit)}
-                    </div>
+                    <DeleteOrderButton id={o.id} />
                   </div>
                 </div>
               </div>

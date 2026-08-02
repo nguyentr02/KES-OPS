@@ -5,8 +5,9 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { db } from "@/db";
-import { orderItems, orders, products } from "@/db/schema";
+import { activityLogs, orderItems, orders, products } from "@/db/schema";
 import { requireUser } from "@/lib/auth";
+import { formatVnd, paymentLabel } from "@/lib/format";
 
 const schema = z.object({
   items: z
@@ -89,4 +90,39 @@ export async function createOrder(input: CreateOrderInput) {
   revalidatePath("/orders");
   revalidatePath("/");
   return { ok: true as const, orderId: order.id };
+}
+
+export async function deleteOrder(orderId: number) {
+  const user = await requireUser();
+
+  const [order] = await db
+    .select()
+    .from(orders)
+    .where(eq(orders.id, orderId))
+    .limit(1);
+  if (!order) return { ok: false as const };
+
+  const items = await db
+    .select()
+    .from(orderItems)
+    .where(eq(orderItems.orderId, orderId));
+  const itemsStr =
+    items
+      .map(
+        (i) =>
+          `${i.nameSnapshot}${i.sizeSnapshot ? ` (${i.sizeSnapshot})` : ""} ×${i.qty}`,
+      )
+      .join(", ") || "—";
+  const summary = `Đơn #${order.id} · ${formatVnd(order.revenueTotal)} · ${itemsStr} · ${paymentLabel[order.paymentMethod] ?? order.paymentMethod}`;
+
+  // Cascade removes order_items; then record the deletion in the audit log.
+  await db.delete(orders).where(eq(orders.id, orderId));
+  await db
+    .insert(activityLogs)
+    .values({ action: "Xóa đơn hàng", summary, actorName: user.name });
+
+  revalidatePath("/orders");
+  revalidatePath("/");
+  revalidatePath("/lich-su");
+  return { ok: true as const };
 }

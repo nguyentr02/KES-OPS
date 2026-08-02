@@ -134,8 +134,20 @@ export const recipeItems = pgTable("recipe_items", {
   qty: numeric("qty", { mode: "number" }).notNull(),
 });
 
+/** Audit trail for edits/deletions — shown in the "Lịch sử chỉnh sửa" tab. */
+export const activityLogs = pgTable("activity_logs", {
+  id: serial("id").primaryKey(),
+  action: text("action").notNull(), // e.g. "Xóa đơn hàng"
+  summary: text("summary").notNull(),
+  actorName: text("actor_name").notNull(), // who did it (snapshot)
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
 export type User = typeof users.$inferSelect;
 export type Product = typeof products.$inferSelect;
+export type ActivityLog = typeof activityLogs.$inferSelect;
 export type Ingredient = typeof ingredients.$inferSelect;
 export type Component = typeof components.$inferSelect;
 export type ComponentItem = typeof componentItems.$inferSelect;
