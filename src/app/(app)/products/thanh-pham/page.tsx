@@ -8,10 +8,12 @@ import { formatVnd } from "@/lib/format";
 export const dynamic = "force-dynamic";
 
 export default async function ComponentsPage() {
-  const graph = await loadCostGraph();
-  const comps = await db.select().from(components).orderBy(asc(components.sort));
-  const items = await db.select().from(componentItems);
-  const ings = await db.select().from(ingredients);
+  const [graph, comps, items, ings] = await Promise.all([
+    loadCostGraph(),
+    db.select().from(components).orderBy(asc(components.sort)),
+    db.select().from(componentItems),
+    db.select().from(ingredients),
+  ]);
   const ingById = new Map(ings.map((i) => [i.id, i]));
 
   return (

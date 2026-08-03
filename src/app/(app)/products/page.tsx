@@ -8,11 +8,14 @@ import { lineUnitCost, loadCostGraph } from "@/lib/costing";
 export const dynamic = "force-dynamic";
 
 export default async function ProductsPage() {
-  const graph = await loadCostGraph();
-  const prods = await db.select().from(products).orderBy(asc(products.sort));
-  const rItems = await db.select().from(recipeItems);
-  const ings = await db.select().from(ingredients);
-  const comps = await db.select().from(components);
+  // All independent — one parallel wave instead of five serial round-trips.
+  const [graph, prods, rItems, ings, comps] = await Promise.all([
+    loadCostGraph(),
+    db.select().from(products).orderBy(asc(products.sort)),
+    db.select().from(recipeItems),
+    db.select().from(ingredients),
+    db.select().from(components),
+  ]);
   const ingById = new Map(ings.map((i) => [i.id, i]));
   const compById = new Map(comps.map((c) => [c.id, c]));
 

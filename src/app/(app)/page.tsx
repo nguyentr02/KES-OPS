@@ -38,27 +38,32 @@ export default async function DashboardPage({
       : "today";
   const range = dateParam ? computeDay(dateParam) : computePeriod(period!);
 
-  const orderRows = await db
-    .select({
-      id: orders.id,
-      createdAt: orders.createdAt,
-      revenueTotal: orders.revenueTotal,
-      cogsTotal: orders.cogsTotal,
-    })
-    .from(orders)
-    .where(
-      and(gte(orders.createdAt, range.startUtc), lt(orders.createdAt, range.endUtc)),
-    );
-
-  const expenseRows = await db
-    .select({ spentOn: expenses.spentOn, amount: expenses.amount })
-    .from(expenses)
-    .where(
-      and(
-        gte(expenses.spentOn, range.startDateStr),
-        lte(expenses.spentOn, range.endDateStr),
+  // Orders and expenses are independent — fetch them together.
+  const [orderRows, expenseRows] = await Promise.all([
+    db
+      .select({
+        id: orders.id,
+        createdAt: orders.createdAt,
+        revenueTotal: orders.revenueTotal,
+        cogsTotal: orders.cogsTotal,
+      })
+      .from(orders)
+      .where(
+        and(
+          gte(orders.createdAt, range.startUtc),
+          lt(orders.createdAt, range.endUtc),
+        ),
       ),
-    );
+    db
+      .select({ spentOn: expenses.spentOn, amount: expenses.amount })
+      .from(expenses)
+      .where(
+        and(
+          gte(expenses.spentOn, range.startDateStr),
+          lte(expenses.spentOn, range.endDateStr),
+        ),
+      ),
+  ]);
 
   const revenue = orderRows.reduce((s, o) => s + o.revenueTotal, 0);
   const cogs = orderRows.reduce((s, o) => s + o.cogsTotal, 0);

@@ -26,11 +26,14 @@ export interface CostGraph {
 
 /** Load ingredients + components and compute their unit costs (no writes). */
 export async function loadCostGraph(): Promise<CostGraph> {
-  const ings = await db.select().from(ingredients);
+  // Independent reads — run them in one round-trip wave, not serially.
+  const [ings, comps, cItems] = await Promise.all([
+    db.select().from(ingredients),
+    db.select().from(components),
+    db.select().from(componentItems),
+  ]);
   const ingUnit = new Map(ings.map((i) => [i.id, unitPriceOf(i)]));
 
-  const comps = await db.select().from(components);
-  const cItems = await db.select().from(componentItems);
   const compUnit = new Map<number, number>();
   for (const c of comps) {
     const items = cItems.filter((ci) => ci.componentId === c.id);
@@ -78,11 +81,17 @@ export async function recomputeCosts(): Promise<void> {
     else byProduct.set(ri.productId, [ri]);
   }
 
-  for (const [productId, lines] of byProduct) {
-    const cost = lines.reduce(
-      (s, ri) => s + ri.qty * lineUnitCost(ri, graph),
-      0,
-    );
-    await db.update(products).set({ costPrice: cost }).where(eq(products.id, productId));
-  }
+  // Update every product's cost concurrently instead of one-at-a-time.
+  await Promise.all(
+    [...byProduct].map(([productId, lines]) => {
+      const cost = lines.reduce(
+        (s, ri) => s + ri.qty * lineUnitCost(ri, graph),
+        0,
+      );
+      return db
+        .update(products)
+        .set({ costPrice: cost })
+        .where(eq(products.id, productId));
+    }),
+  );
 }
