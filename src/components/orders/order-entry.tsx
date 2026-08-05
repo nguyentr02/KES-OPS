@@ -1,6 +1,6 @@
 "use client";
 
-import { Coffee, Minus, Plus, Search, X } from "lucide-react";
+import { Coffee, Minus, Plus, QrCode, Search, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
@@ -52,6 +52,7 @@ export function OrderEntry({
   const [discount, setDiscount] = useState<0 | 10 | 20>(0);
   const [note, setNote] = useState("");
   const [cartOpen, setCartOpen] = useState(false);
+  const [qrFull, setQrFull] = useState(false);
   const [pending, startTransition] = useTransition();
 
   const filtered = useMemo(() => {
@@ -128,6 +129,7 @@ export function OrderEntry({
     removeItem,
     save,
     pending,
+    showQr: () => setQrFull(true),
   };
 
   return (
@@ -185,7 +187,15 @@ export function OrderEntry({
 
       {/* ---------------- Right: cart (tablet/desktop) ---------------- */}
       <aside className="hidden lg:block">
-        <div className="sticky top-20 flex max-h-[calc(100dvh-6rem)] flex-col overflow-hidden rounded-2xl border border-border/60 bg-card">
+        <div
+          className={cn(
+            "sticky top-20 flex flex-col overflow-hidden rounded-2xl border border-border/60 bg-card",
+            // On transfer, take the full column height so the QR can fill it.
+            payment === "transfer"
+              ? "h-[calc(100dvh-6rem)]"
+              : "max-h-[calc(100dvh-6rem)]",
+          )}
+        >
           <CartContents {...cartProps} />
         </div>
       </aside>
@@ -211,6 +221,34 @@ export function OrderEntry({
           <div className="absolute inset-x-0 bottom-0 flex max-h-[85dvh] flex-col overflow-hidden rounded-t-2xl bg-card">
             <CartContents {...cartProps} onClose={() => setCartOpen(false)} />
           </div>
+        </div>
+      )}
+
+      {/* Full-screen QR — opened from the mobile "Xem mã QR" button */}
+      {qrFull && (
+        <div
+          className="fixed inset-0 z-[60] flex flex-col items-center justify-center gap-4 bg-foreground/80 p-6"
+          onClick={() => setQrFull(false)}
+        >
+          <button
+            type="button"
+            aria-label="Đóng"
+            onClick={() => setQrFull(false)}
+            className="absolute top-4 right-4 flex size-10 items-center justify-center rounded-full bg-background/90 text-foreground"
+          >
+            <X className="size-5" />
+          </button>
+          <span className="text-sm font-medium text-background">
+            Quét mã để chuyển khoản
+          </span>
+          <Image
+            src="/qr-thanh-toan.png"
+            alt="Mã QR chuyển khoản"
+            width={737}
+            height={961}
+            className="h-auto w-full max-w-sm rounded-2xl bg-white"
+            onClick={(e) => e.stopPropagation()}
+          />
         </div>
       )}
     </div>
@@ -286,6 +324,7 @@ function CartContents({
   removeItem,
   save,
   pending,
+  showQr,
   onClose,
 }: {
   cart: CartLine[];
@@ -300,6 +339,7 @@ function CartContents({
   removeItem: (id: number) => void;
   save: () => void;
   pending: boolean;
+  showQr: () => void;
   onClose?: () => void;
 }) {
   const discountAmount = Math.round((total * discount) / 100);
@@ -320,7 +360,7 @@ function CartContents({
         )}
       </div>
 
-      <div className="min-h-24 flex-1 overflow-y-auto">
+      <div className="min-h-24 max-h-[45vh] overflow-y-auto">
         {cart.length === 0 ? (
           <p className="p-6 text-center text-sm text-muted-foreground">
             Chạm vào món để thêm vào đơn.
@@ -453,7 +493,39 @@ function CartContents({
         >
           {pending ? "Đang lưu…" : "Lưu đơn"}
         </Button>
+
+        {/* Phone: a button opens the QR full-screen (inline QR would overflow
+            the bottom-sheet drawer). */}
+        {payment === "transfer" && (
+          <button
+            type="button"
+            onClick={showQr}
+            className="mt-2 flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-border font-medium text-foreground lg:hidden"
+          >
+            <QrCode className="size-4" />
+            Xem mã QR để chuyển khoản
+          </button>
+        )}
       </div>
+
+      {/* Tablet/desktop: QR fills the panel width and remaining height so it's
+          big and easy for the customer to scan. Hidden on phones (button above). */}
+      {payment === "transfer" && (
+        <div className="hidden min-h-0 flex-1 flex-col items-center gap-1.5 border-t border-border/60 p-3 lg:flex">
+          <span className="text-xs text-muted-foreground">
+            Quét mã để chuyển khoản
+          </span>
+          <div className="relative min-h-[280px] w-full flex-1">
+            <Image
+              src="/qr-thanh-toan.png"
+              alt="Mã QR chuyển khoản"
+              fill
+              sizes="500px"
+              className="rounded-lg object-contain"
+            />
+          </div>
+        </div>
+      )}
     </>
   );
 }
