@@ -1,12 +1,16 @@
 "use client";
 
-import { Coffee, Minus, Plus, QrCode, Search, X } from "lucide-react";
+import { Coffee, Minus, Plus, QrCode, ReceiptText, Search, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import { createOrder } from "@/app/(app)/orders/actions";
+import {
+  ReceiptView,
+  type ReceiptData,
+} from "@/components/orders/receipt";
 import { Button } from "@/components/ui/button";
 import { formatVnd } from "@/lib/format";
 import { productImage } from "@/lib/product-images";
@@ -53,6 +57,7 @@ export function OrderEntry({
   const [note, setNote] = useState("");
   const [cartOpen, setCartOpen] = useState(false);
   const [qrFull, setQrFull] = useState(false);
+  const [receiptData, setReceiptData] = useState<ReceiptData | null>(null);
   const [pending, startTransition] = useTransition();
 
   const filtered = useMemo(() => {
@@ -116,6 +121,31 @@ export function OrderEntry({
     });
   }
 
+  // Build a receipt from the current cart (no save needed) so the customer can
+  // review món + tổng tiền and scan the QR to pay.
+  function openReceipt() {
+    if (count === 0) {
+      toast.error("Chưa chọn món nào.");
+      return;
+    }
+    const net = total - Math.round((total * discount) / 100);
+    setReceiptData({
+      createdAt: new Date().toISOString(),
+      paymentMethod: payment,
+      discountPercent: discount,
+      subtotal: total,
+      revenueTotal: net,
+      note: note || null,
+      items: cart.map((c) => ({
+        name: c.name,
+        size: c.sizeLabel,
+        qty: c.qty,
+        unit: c.salePrice,
+        line: c.line,
+      })),
+    });
+  }
+
   const cartProps = {
     cart,
     total,
@@ -128,6 +158,7 @@ export function OrderEntry({
     bump,
     removeItem,
     save,
+    showReceipt: openReceipt,
     pending,
     showQr: () => setQrFull(true),
   };
@@ -251,6 +282,31 @@ export function OrderEntry({
           />
         </div>
       )}
+
+      {/* Receipt preview built from the current cart */}
+      {receiptData && (
+        <div
+          className="fixed inset-0 z-[60] overflow-y-auto bg-foreground/60 p-4"
+          onClick={() => setReceiptData(null)}
+        >
+          <div
+            className="mx-auto max-w-md"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-3 flex justify-end">
+              <button
+                type="button"
+                aria-label="Đóng"
+                onClick={() => setReceiptData(null)}
+                className="flex size-10 items-center justify-center rounded-full bg-background/90 text-foreground"
+              >
+                <X className="size-5" />
+              </button>
+            </div>
+            <ReceiptView data={receiptData} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -323,6 +379,7 @@ function CartContents({
   bump,
   removeItem,
   save,
+  showReceipt,
   pending,
   showQr,
   onClose,
@@ -338,6 +395,7 @@ function CartContents({
   bump: (id: number, d: number) => void;
   removeItem: (id: number) => void;
   save: () => void;
+  showReceipt: () => void;
   pending: boolean;
   showQr: () => void;
   onClose?: () => void;
@@ -492,6 +550,18 @@ function CartContents({
           className="h-11 w-full"
         >
           {pending ? "Đang lưu…" : "Lưu đơn"}
+        </Button>
+
+        {/* Receipt built from the current cart — customer reviews món + tổng
+            tiền and scans the QR. No save required. */}
+        <Button
+          onClick={showReceipt}
+          disabled={cart.length === 0}
+          variant="outline"
+          className="mt-2 h-11 w-full"
+        >
+          <ReceiptText className="size-4" />
+          Xuất biên lai
         </Button>
 
         {/* Phone: a button opens the QR full-screen (inline QR would overflow

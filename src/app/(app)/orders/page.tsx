@@ -1,5 +1,5 @@
 import { desc, inArray } from "drizzle-orm";
-import { Plus } from "lucide-react";
+import { Plus, ReceiptText } from "lucide-react";
 import Link from "next/link";
 
 import { DeleteOrderButton } from "@/components/orders/delete-order-button";
@@ -83,6 +83,14 @@ export default async function OrdersPage() {
                         lãi {formatVnd(profit)}
                       </div>
                     </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      title="Biên lai"
+                      render={<Link href={`/orders/${o.id}/receipt`} />}
+                    >
+                      <ReceiptText className="size-4" />
+                    </Button>
                     <DeleteOrderButton id={o.id} />
                   </div>
                 </div>
