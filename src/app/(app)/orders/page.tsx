@@ -48,50 +48,84 @@ export default async function OrdersPage() {
         <div className="flex flex-col gap-2">
           {recent.map((o) => {
             const lines = byOrder.get(o.id) ?? [];
-            const summary = lines
-              .map(
-                (l) =>
-                  `${l.nameSnapshot}${l.sizeSnapshot ? ` (${l.sizeSnapshot})` : ""} ×${l.qty}`,
-              )
-              .join(", ");
-            const profit = o.revenueTotal - o.cogsTotal;
+            const profit = Math.round(o.revenueTotal - o.cogsTotal);
+            const count = lines.reduce((s, l) => s + l.qty, 0);
             return (
               <div
                 key={o.id}
-                className="rounded-xl border border-border/60 bg-card p-3.5"
+                className="rounded-xl border border-border/60 bg-card p-4"
               >
+                {/* Header: id + time, and actions */}
                 <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <div className="text-xs text-muted-foreground">
-                      #{o.id} · {formatDateTime(o.createdAt)} ·{" "}
+                  <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+                    <span className="font-semibold">#{o.id}</span>
+                    <span className="text-muted-foreground/40">·</span>
+                    <span className="text-sm text-muted-foreground">
+                      {formatDateTime(o.createdAt)}
+                    </span>
+                    <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
                       {paymentLabel[o.paymentMethod] ?? o.paymentMethod}
-                      {o.discountPercent > 0 && ` · giảm ${o.discountPercent}%`}
-                    </div>
-                    <div className="mt-1 text-sm">{summary || "—"}</div>
-                    {o.note && (
-                      <div className="mt-1 text-xs text-muted-foreground italic">
-                        {o.note}
-                      </div>
+                    </span>
+                    {o.discountPercent > 0 && (
+                      <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                        giảm {o.discountPercent}%
+                      </span>
                     )}
                   </div>
-                  <div className="flex shrink-0 items-start gap-1">
-                    <div className="text-right">
-                      <div className="font-semibold tabular-nums">
-                        {formatVnd(o.revenueTotal)}
-                      </div>
-                      <div className="text-xs text-muted-foreground tabular-nums">
-                        lãi {formatVnd(profit)}
-                      </div>
-                    </div>
+                  <div className="flex shrink-0 items-center gap-1">
                     <Button
                       variant="ghost"
-                      size="icon"
+                      size="icon-lg"
                       title="Biên lai"
+                      className="text-muted-foreground"
                       render={<Link href={`/orders/${o.id}/receipt`} />}
                     >
                       <ReceiptText className="size-4" />
                     </Button>
                     <DeleteOrderButton id={o.id} />
+                  </div>
+                </div>
+
+                {/* Items */}
+                <ul className="mt-3 space-y-1.5">
+                  {lines.map((l) => (
+                    <li
+                      key={l.id}
+                      className="flex items-baseline justify-between gap-3 text-sm"
+                    >
+                      <span className="min-w-0 truncate">
+                        {l.nameSnapshot}
+                        {l.sizeSnapshot && (
+                          <span className="ml-1 text-xs text-muted-foreground">
+                            ({l.sizeSnapshot})
+                          </span>
+                        )}
+                      </span>
+                      <span className="shrink-0 tabular-nums text-muted-foreground">
+                        ×{l.qty}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+
+                {o.note && (
+                  <div className="mt-2.5 rounded-lg bg-muted/60 px-3 py-2 text-xs text-muted-foreground italic">
+                    {o.note}
+                  </div>
+                )}
+
+                {/* Total */}
+                <div className="mt-3 flex items-baseline justify-between border-t border-border/60 pt-3">
+                  <span className="text-sm text-muted-foreground">
+                    {count} món
+                  </span>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-xs text-muted-foreground tabular-nums">
+                      lãi {formatVnd(profit)}
+                    </span>
+                    <span className="font-serif text-lg font-semibold tabular-nums">
+                      {formatVnd(o.revenueTotal)}
+                    </span>
                   </div>
                 </div>
               </div>
