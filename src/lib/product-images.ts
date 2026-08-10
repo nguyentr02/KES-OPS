@@ -13,6 +13,11 @@ const SLUGS: Record<string, string> = {
   "Cold Brew Cam": "cold-brew-cam",
   "Cold Brew Tonic": "cold-brew-tonic",
   "Trà Chanh Vàng Macchiato": "cold-brew-tonic", // tạm dùng ảnh cold brew tonic
+  "Cà Phê Đen Chai": "cold-brew-chai", // tạm dùng ảnh chai
+  "Cacao Latte": "bac-xiu", // tạm dùng ảnh — thay ảnh thật sau
+  "Cacao Muối": "bac-xiu-muoi", // tạm dùng ảnh — thay ảnh thật sau
+  "Matcha Latte": "cold-brew-tonic", // tạm dùng ảnh — thay ảnh thật sau
+  "Matcha Cold Whisk": "cold-brew-tonic", // tạm dùng ảnh — thay ảnh thật sau
 };
 
 export function productImage(name: string): string | null {
