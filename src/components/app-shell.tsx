@@ -6,6 +6,7 @@ import {
   LayoutDashboard,
   LogOut,
   ReceiptText,
+  Table2,
   Wallet,
 } from "lucide-react";
 import Link from "next/link";
@@ -19,6 +20,7 @@ const NAV = [
   { href: "/orders", label: "Đơn hàng", icon: ReceiptText },
   { href: "/expenses", label: "Chi phí", icon: Wallet },
   { href: "/products", label: "Sản phẩm", icon: Coffee },
+  { href: "/bang-tinh", label: "Bảng tính", icon: Table2 },
   { href: "/lich-su", label: "Lịch sử", icon: History },
 ] as const;
 
@@ -90,7 +92,7 @@ export function AppShell({
 
       {/* Mobile bottom nav */}
       <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border/60 bg-background/95 backdrop-blur-md md:hidden">
-        <div className="mx-auto grid max-w-5xl grid-cols-5">
+        <div className="mx-auto grid max-w-5xl grid-cols-6">
           {NAV.map((item) => {
             const active = isActive(pathname, item.href);
             return (

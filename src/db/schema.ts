@@ -2,6 +2,7 @@ import {
   boolean,
   date,
   integer,
+  jsonb,
   numeric,
   pgTable,
   serial,
@@ -145,7 +146,21 @@ export const activityLogs = pgTable("activity_logs", {
     .notNull(),
 });
 
+/**
+ * Free-form spreadsheet(s) — a Univer workbook snapshot (IWorkbookData) stored
+ * as JSON. v1 keeps a single shared workbook; more rows = more workbooks later.
+ */
+export const sheets = pgTable("sheets", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull().default("Bảng tính"),
+  data: jsonb("data"), // Univer IWorkbookData snapshot; null until first save
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
 export type User = typeof users.$inferSelect;
+export type Sheet = typeof sheets.$inferSelect;
 export type Product = typeof products.$inferSelect;
 export type ActivityLog = typeof activityLogs.$inferSelect;
 export type Ingredient = typeof ingredients.$inferSelect;
