@@ -16,8 +16,8 @@ const SLUGS: Record<string, string> = {
   "Cà Phê Đen Chai": "cold-brew-chai", // tạm dùng ảnh chai
   "Cacao Latte": "bac-xiu", // tạm dùng ảnh — thay ảnh thật sau
   "Cacao Muối": "bac-xiu-muoi", // tạm dùng ảnh — thay ảnh thật sau
-  "Matcha Latte": "cold-brew-tonic", // tạm dùng ảnh — thay ảnh thật sau
-  "Matcha Cold Whisk": "cold-brew-tonic", // tạm dùng ảnh — thay ảnh thật sau
+  "Matcha Latte": "matcha",
+  "Matcha Cold Whisk": "matcha",
 };
 
 export function productImage(name: string): string | null {
