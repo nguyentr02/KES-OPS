@@ -3,6 +3,7 @@ import { Plus, ReceiptText } from "lucide-react";
 import Link from "next/link";
 
 import { DeleteOrderButton } from "@/components/orders/delete-order-button";
+import { EditOrderButton } from "@/components/orders/edit-order-button";
 import { Button } from "@/components/ui/button";
 import { db } from "@/db";
 import { orderItems, orders } from "@/db/schema";
@@ -73,6 +74,12 @@ export default async function OrdersPage() {
                     )}
                   </div>
                   <div className="flex shrink-0 items-center gap-1">
+                    <EditOrderButton
+                      id={o.id}
+                      revenueTotal={o.revenueTotal}
+                      paymentMethod={o.paymentMethod}
+                      note={o.note}
+                    />
                     <Button
                       variant="ghost"
                       size="icon-lg"

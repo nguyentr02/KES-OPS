@@ -183,16 +183,36 @@ async function renderReceipt(data: ReceiptData): Promise<string> {
   hline(y);
   y += 42;
 
-  // Totals
+  // Totals. `adjustment` is a manual tip / take-off: revenue that differs from
+  // the discounted subtotal. Shown on its own line so the numbers add up.
   const body = `400 25px ${SANS}`;
-  if (data.discountPercent > 0) {
+  const discountAmount = Math.round(
+    (data.subtotal * data.discountPercent) / 100,
+  );
+  const adjustment = data.revenueTotal - (data.subtotal - discountAmount);
+  if (data.discountPercent > 0 || adjustment !== 0) {
     draw("Tạm tính", PAD, y, body, MUT, "left");
     draw(formatVnd(data.subtotal), W - PAD, y, body, INK, "right");
     y += 40;
-    const disc = data.subtotal - data.revenueTotal;
-    draw(`Giảm ${data.discountPercent}%`, PAD, y, body, RED, "left");
-    draw(`− ${formatVnd(disc)}`, W - PAD, y, body, RED, "right");
-    y += 48;
+    if (data.discountPercent > 0) {
+      draw(`Giảm ${data.discountPercent}%`, PAD, y, body, RED, "left");
+      draw(`− ${formatVnd(discountAmount)}`, W - PAD, y, body, RED, "right");
+      y += 40;
+    }
+    if (adjustment !== 0) {
+      const up = adjustment > 0;
+      draw(up ? "Khách trả thêm" : "Bớt lại", PAD, y, body, MUT, "left");
+      draw(
+        `${up ? "+" : "−"} ${formatVnd(Math.abs(adjustment))}`,
+        W - PAD,
+        y,
+        body,
+        up ? INK : RED,
+        "right",
+      );
+      y += 40;
+    }
+    y += 8;
   }
   // Highlighted total band
   panel(PAD, y - 42, CW, 64, TOTAL_BG);

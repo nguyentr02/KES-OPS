@@ -1,9 +1,19 @@
 "use client";
 
-import { Coffee, Minus, Plus, QrCode, ReceiptText, Search, X } from "lucide-react";
+import {
+  Check,
+  Coffee,
+  Minus,
+  Pencil,
+  Plus,
+  QrCode,
+  ReceiptText,
+  Search,
+  X,
+} from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import { createOrder } from "@/app/(app)/orders/actions";
@@ -58,6 +68,8 @@ export function OrderEntry({
   const [cartOpen, setCartOpen] = useState(false);
   const [qrFull, setQrFull] = useState(false);
   const [receiptData, setReceiptData] = useState<ReceiptData | null>(null);
+  // Manual override of the final amount (tip / take-off); null = use computed.
+  const [overrideTotal, setOverrideTotal] = useState<number | null>(null);
   const [pending, startTransition] = useTransition();
 
   const filtered = useMemo(() => {
@@ -78,6 +90,13 @@ export function OrderEntry({
   );
   const count = cart.reduce((s, c) => s + c.qty, 0);
   const total = cart.reduce((s, c) => s + c.line, 0);
+  const computedNet = total - Math.round((total * discount) / 100);
+  const finalTotal = overrideTotal ?? computedNet;
+
+  // A manual total is a last step — drop it if the cart or discount changes.
+  useEffect(() => {
+    setOverrideTotal(null);
+  }, [total, discount]);
 
   function bump(id: number, d: number) {
     setQty((x) => {
@@ -102,20 +121,21 @@ export function OrderEntry({
       return;
     }
     const items = cart.map((c) => ({ productId: c.id, qty: c.qty }));
-    const net = total - Math.round((total * discount) / 100);
     startTransition(async () => {
       const res = await createOrder({
         items,
         paymentMethod: payment,
         discountPercent: discount,
         note,
+        finalTotal: overrideTotal ?? undefined,
       });
       if (res.ok) {
         setQty({});
         setNote("");
         setDiscount(0);
+        setOverrideTotal(null);
         setCartOpen(false);
-        toast.success(`Đã lưu đơn #${res.orderId} · ${formatVnd(net)}`);
+        toast.success(`Đã lưu đơn #${res.orderId} · ${formatVnd(finalTotal)}`);
         router.push("/orders");
       }
     });
@@ -128,13 +148,12 @@ export function OrderEntry({
       toast.error("Chưa chọn món nào.");
       return;
     }
-    const net = total - Math.round((total * discount) / 100);
     setReceiptData({
       createdAt: new Date().toISOString(),
       paymentMethod: payment,
       discountPercent: discount,
       subtotal: total,
-      revenueTotal: net,
+      revenueTotal: finalTotal,
       note: note || null,
       items: cart.map((c) => ({
         name: c.name,
@@ -161,6 +180,10 @@ export function OrderEntry({
     showReceipt: openReceipt,
     pending,
     showQr: () => setQrFull(true),
+    finalTotal,
+    computedNet,
+    isOverridden: overrideTotal !== null,
+    setOverride: setOverrideTotal,
   };
 
   return (
@@ -382,6 +405,10 @@ function CartContents({
   showReceipt,
   pending,
   showQr,
+  finalTotal,
+  computedNet,
+  isOverridden,
+  setOverride,
   onClose,
 }: {
   cart: CartLine[];
@@ -398,10 +425,20 @@ function CartContents({
   showReceipt: () => void;
   pending: boolean;
   showQr: () => void;
+  finalTotal: number;
+  computedNet: number;
+  isOverridden: boolean;
+  setOverride: (v: number | null) => void;
   onClose?: () => void;
 }) {
   const discountAmount = Math.round((total * discount) / 100);
-  const net = total - discountAmount;
+  const [editingTotal, setEditingTotal] = useState(false);
+  const [draftTotal, setDraftTotal] = useState("");
+  function commitTotal() {
+    const v = draftTotal.trim() === "" ? computedNet : Math.round(Number(draftTotal));
+    if (Number.isFinite(v) && v >= 0) setOverride(v === computedNet ? null : v);
+    setEditingTotal(false);
+  }
   return (
     <>
       <div className="flex shrink-0 items-center justify-between border-b border-border/60 p-3">
@@ -538,12 +575,69 @@ function CartContents({
             </div>
           </div>
         )}
-        <div className="mb-2 flex items-baseline justify-between">
+        <div className="mb-2 flex items-center justify-between gap-2">
           <span className="text-sm text-muted-foreground">Tổng tiền</span>
-          <span className="font-serif text-xl font-semibold tabular-nums">
-            {formatVnd(net)}
-          </span>
+          {editingTotal ? (
+            <span className="flex items-center gap-1.5">
+              <input
+                autoFocus
+                inputMode="numeric"
+                value={draftTotal}
+                onChange={(e) =>
+                  setDraftTotal(e.target.value.replace(/[^\d]/g, ""))
+                }
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") commitTotal();
+                  if (e.key === "Escape") setEditingTotal(false);
+                }}
+                className="h-9 w-28 rounded-lg border border-input bg-transparent px-2 text-right font-serif text-lg font-semibold tabular-nums outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+              />
+              <button
+                type="button"
+                aria-label="Xác nhận"
+                onClick={commitTotal}
+                className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground"
+              >
+                <Check className="size-4" />
+              </button>
+            </span>
+          ) : (
+            <span className="flex items-center gap-1.5">
+              {isOverridden && (
+                <button
+                  type="button"
+                  onClick={() => setOverride(null)}
+                  className="text-xs text-muted-foreground underline underline-offset-2"
+                >
+                  hoàn lại
+                </button>
+              )}
+              <span className="font-serif text-xl font-semibold tabular-nums">
+                {formatVnd(finalTotal)}
+              </span>
+              <button
+                type="button"
+                aria-label="Sửa tổng tiền"
+                onClick={() => {
+                  setDraftTotal(String(finalTotal));
+                  setEditingTotal(true);
+                }}
+                className="flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              >
+                <Pencil className="size-3.5" />
+              </button>
+            </span>
+          )}
         </div>
+        {isOverridden && finalTotal !== computedNet && (
+          <div className="mb-2 -mt-1 flex justify-between text-xs tabular-nums text-muted-foreground">
+            <span>{finalTotal > computedNet ? "Khách trả thêm" : "Bớt lại"}</span>
+            <span>
+              {finalTotal > computedNet ? "+" : "−"}
+              {formatVnd(Math.abs(finalTotal - computedNet))}
+            </span>
+          </div>
+        )}
         <Button
           onClick={save}
           disabled={pending || cart.length === 0}

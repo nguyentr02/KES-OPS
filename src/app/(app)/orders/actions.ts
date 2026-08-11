@@ -21,6 +21,9 @@ const schema = z.object({
   paymentMethod: z.enum(["cash", "transfer"]),
   discountPercent: z.union([z.literal(0), z.literal(10), z.literal(20)]).default(0),
   note: z.string().max(500).optional(),
+  // Manual override of the money actually received (tip added / amount taken
+  // off). When set it wins over the computed net; profit reflects it.
+  finalTotal: z.number().int().min(0).max(100_000_000).optional(),
 });
 
 export type CreateOrderInput = z.infer<typeof schema>;
@@ -60,10 +63,11 @@ export async function createOrder(input: CreateOrderInput) {
     };
   });
 
-  // Discount is order-level; revenue received = subtotal minus the discount.
+  // Discount is order-level; revenue received = subtotal minus the discount,
+  // unless the staff manually overrode the final amount (tip / take-off).
   const subtotal = revenueTotal;
   const discountAmount = Math.round((subtotal * data.discountPercent) / 100);
-  const netRevenue = subtotal - discountAmount;
+  const netRevenue = data.finalTotal ?? subtotal - discountAmount;
 
   const [order] = await db
     .insert(orders)
@@ -90,6 +94,49 @@ export async function createOrder(input: CreateOrderInput) {
   revalidatePath("/orders");
   revalidatePath("/");
   return { ok: true as const, orderId: order.id };
+}
+
+const updateSchema = z.object({
+  revenueTotal: z.number().int().min(0).max(100_000_000),
+  paymentMethod: z.enum(["cash", "transfer"]),
+  note: z.string().max(500).optional(),
+});
+
+export type UpdateOrderInput = z.infer<typeof updateSchema>;
+
+/** Edit a saved order's money/payment/note (e.g. add a tip or take some off). */
+export async function updateOrder(orderId: number, input: UpdateOrderInput) {
+  const user = await requireUser();
+  const data = updateSchema.parse(input);
+
+  const [order] = await db
+    .select()
+    .from(orders)
+    .where(eq(orders.id, orderId))
+    .limit(1);
+  if (!order) return { ok: false as const };
+
+  await db
+    .update(orders)
+    .set({
+      revenueTotal: data.revenueTotal,
+      paymentMethod: data.paymentMethod,
+      note: data.note?.trim() || null,
+    })
+    .where(eq(orders.id, orderId));
+
+  // Record the change (money is the meaningful edit) in the audit trail.
+  if (order.revenueTotal !== data.revenueTotal) {
+    const summary = `Đơn #${orderId} · ${formatVnd(order.revenueTotal)} → ${formatVnd(data.revenueTotal)}`;
+    await db
+      .insert(activityLogs)
+      .values({ action: "Sửa đơn hàng", summary, actorName: user.name });
+  }
+
+  revalidatePath("/orders");
+  revalidatePath("/");
+  revalidatePath("/lich-su");
+  return { ok: true as const };
 }
 
 export async function deleteOrder(orderId: number) {
