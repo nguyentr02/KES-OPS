@@ -27,7 +27,7 @@ cd kes-ops
 npm install
 cp .env.example .env.local     # then fill in DATABASE_URL + SESSION_SECRET
 npm run db:migrate             # create tables in Neon
-npm run db:seed                # seed the 23 SKUs + the shared login
+npm run db:seed                # seed the 26 SKUs + the shared login
 npm run dev                    # http://localhost:3000
 ```
 
@@ -45,6 +45,9 @@ Login: `kescafe2026` / `Kes2026@` (single shared account, seeded).
 - `npm run db:generate` — new migration from schema changes
 - `npm run db:migrate` — apply migrations · `db:push` — push schema directly
 - `npm run db:seed` — idempotent (users upserted; products only seeded when empty)
+- `npx tsx src/db/sync-menu.ts [--dry-run]` — push the printed menu's sale prices
+  onto an already-seeded DB (idempotent; never touches giá vốn). Run this, not
+  `db:seed`, when the menu's prices change.
 
 ## Deploy (own repo + own Vercel project)
 

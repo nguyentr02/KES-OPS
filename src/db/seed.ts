@@ -16,7 +16,12 @@ const STAFF: { username: string; name: string; password: string }[] = [
   { username: "kescafe2026", name: "KES Cafe", password: "Kes2026@" },
 ];
 
-/** Sellable SKUs, mirrored from the website menu (cost/giá vốn set later in-app). */
+/**
+ * Sellable SKUs, mirrored from the printed menu / website (cost/giá vốn comes
+ * from the recipe — see `seed-costing.ts`). Trà Chanh Vàng Macchiato is off the
+ * menu and is no longer seeded; it stays in the live DB as an inactive product
+ * so past orders keep their line items.
+ */
 const MENU: {
   category: string;
   name: string;
@@ -59,7 +64,7 @@ const MENU: {
     name: "Bạc Xỉu",
     sizes: [
       { label: "S", price: 27000 },
-      { label: "M", price: 31000 },
+      { label: "M", price: 34000 },
     ],
   },
   {
@@ -69,6 +74,12 @@ const MENU: {
       { label: "S", price: 29000 },
       { label: "M", price: 36000 },
     ],
+  },
+  // Không có trên menu in — vẫn bán, nên vẫn seed.
+  {
+    category: "Cà Phê",
+    name: "Cà Phê Đen Chai",
+    sizes: [{ label: null, price: 50000 }],
   },
   {
     category: "Cold Brew",
@@ -80,12 +91,7 @@ const MENU: {
   },
   {
     category: "Cold Brew",
-    name: "Cold Brew Chai",
-    sizes: [{ label: null, price: 59000 }],
-  },
-  {
-    category: "Cold Brew",
-    name: "Cold Brew Chanh Vàng",
+    name: "Cold Brew Cam",
     sizes: [
       { label: "S", price: 41000 },
       { label: "M", price: 48000 },
@@ -93,7 +99,7 @@ const MENU: {
   },
   {
     category: "Cold Brew",
-    name: "Cold Brew Cam",
+    name: "Cold Brew Chanh Vàng",
     sizes: [
       { label: "S", price: 41000 },
       { label: "M", price: 48000 },
@@ -108,12 +114,30 @@ const MENU: {
     ],
   },
   {
-    category: "Trà Macchiato",
-    name: "Trà Chanh Vàng Macchiato",
-    sizes: [
-      { label: "S", price: 31000 },
-      { label: "M", price: 38000 },
-    ],
+    category: "Cold Brew",
+    name: "Cold Brew Chai",
+    sizes: [{ label: null, price: 59000 }],
+  },
+  // Chỉ có size M.
+  {
+    category: "Matcha & Cacao",
+    name: "Cacao Latte",
+    sizes: [{ label: "M", price: 38000 }],
+  },
+  {
+    category: "Matcha & Cacao",
+    name: "Cacao Muối",
+    sizes: [{ label: "M", price: 41000 }],
+  },
+  {
+    category: "Matcha & Cacao",
+    name: "Matcha Latte",
+    sizes: [{ label: "M", price: 43000 }],
+  },
+  {
+    category: "Matcha & Cacao",
+    name: "Matcha Cold Whisk",
+    sizes: [{ label: "M", price: 45000 }],
   },
 ];
 
