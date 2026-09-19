@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import { createOrder } from "@/app/(app)/orders/actions";
@@ -94,9 +94,14 @@ export function OrderEntry({
   const finalTotal = overrideTotal ?? computedNet;
 
   // A manual total is a last step — drop it if the cart or discount changes.
-  useEffect(() => {
+  // Adjusted during render (not in an effect) so the override never survives
+  // into a painted frame: https://react.dev/reference/react/useState#storing-information-from-previous-renders
+  const totalKey = `${total}|${discount}`;
+  const [lastTotalKey, setLastTotalKey] = useState(totalKey);
+  if (totalKey !== lastTotalKey) {
+    setLastTotalKey(totalKey);
     setOverrideTotal(null);
-  }, [total, discount]);
+  }
 
   function bump(id: number, d: number) {
     setQty((x) => {

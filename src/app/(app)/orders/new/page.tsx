@@ -1,4 +1,4 @@
-import { and, asc, eq } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 
 import { OrderEntry, type EntryProduct } from "@/components/orders/order-entry";
 import { db } from "@/db";

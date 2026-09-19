@@ -2,7 +2,7 @@
 
 import { ArrowLeft, Download, Share2 } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 
 import { Button } from "@/components/ui/button";
 import { formatVnd, paymentLabel } from "@/lib/format";
@@ -262,11 +262,17 @@ async function renderReceipt(data: ReceiptData): Promise<string> {
   return out.toDataURL("image/png");
 }
 
+/** Whether the browser can share files — capability only, it never changes. */
+const hasCanShare = () => typeof navigator !== "undefined" && "canShare" in navigator;
+const subscribeNever = () => () => {};
+
 /** The receipt image plus download/share actions — reused by the page and the
  *  cart preview modal. */
 export function ReceiptView({ data }: { data: ReceiptData }) {
   const [url, setUrl] = useState<string | null>(null);
-  const [canShare, setCanShare] = useState(false);
+  // navigator is server-unknown, so it's read through a store with a `false`
+  // server snapshot — an effect+setState would trip react-hooks/set-state-in-effect.
+  const canShare = useSyncExternalStore(subscribeNever, hasCanShare, () => false);
   const label = data.id ? `Biên lai #${data.id}` : "Biên lai";
   const title = "Biên lai thanh toán - KES Cafe";
   const fileName = `${title}.png`;
@@ -280,10 +286,6 @@ export function ReceiptView({ data }: { data: ReceiptData }) {
       cancelled = true;
     };
   }, [data]);
-
-  useEffect(() => {
-    setCanShare(typeof navigator !== "undefined" && "canShare" in navigator);
-  }, []);
 
   function download() {
     if (!url) return;

@@ -1,4 +1,4 @@
-import { and, desc, gte, inArray, lt, lte } from "drizzle-orm";
+import { and, gte, inArray, lt, lte } from "drizzle-orm";
 import Link from "next/link";
 
 import { DateFilter } from "@/components/dashboard/date-filter";
