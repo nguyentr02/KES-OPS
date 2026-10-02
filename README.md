@@ -67,6 +67,9 @@ Fully independent of the marketing site — separate repo, separate build.
 ## First run
 
 1. Log in.
-2. **Sản phẩm** → set the **giá vốn** for each drink (profit needs it).
+2. **Sản phẩm** → giá vốn comes from each drink's recipe. Edit ingredients
+   and their prices under **Nguyên liệu**, prep batches under **Thành phẩm
+   thô**, and a drink's recipe under **Món** — all three support add/edit/delete,
+   and every change recomputes giá vốn.
 3. **Đơn hàng → Đơn mới** to take orders; **Chi phí** for overhead.
 4. **Tổng quan** shows revenue, COGS, gross, overhead and net by day/week/month.

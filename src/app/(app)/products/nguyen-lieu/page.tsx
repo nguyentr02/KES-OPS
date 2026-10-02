@@ -11,8 +11,9 @@ export default async function IngredientsPage() {
   return (
     <>
       <p className="mb-4 max-w-2xl text-sm text-muted-foreground">
-        Giá nguyên liệu gốc. Sửa <strong>khối lượng</strong> và{" "}
-        <strong>giá nhập</strong> — đơn giá và giá vốn từng món sẽ tự tính lại.
+        Giá nguyên liệu gốc. Thêm, sửa hoặc xoá ở đây — đơn giá, giá thành phẩm
+        và giá vốn từng món sẽ tự tính lại. Nguyên liệu đang được dùng thì không
+        xoá được.
       </p>
       <IngredientsTable ingredients={rows} />
     </>
