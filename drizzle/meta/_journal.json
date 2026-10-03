@@ -43,6 +43,13 @@
       "when": 1786167326046,
       "tag": "0005_brave_martin_li",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1791022164113,
+      "tag": "0006_free_tomas",
+      "breakpoints": true
     }
   ]
 }

@@ -159,6 +159,22 @@ export const sheets = pgTable("sheets", {
     .notNull(),
 });
 
+/**
+ * How to make a drink, as an ordered list of steps.
+ *
+ * Keyed by product NAME, not id: a drink's sizes are separate product rows but
+ * share one procedure — only the quantities differ, and those live in the
+ * recipe. So "Ca Phe Den" S and M read and write the same row here.
+ */
+export const prepSteps = pgTable("prep_steps", {
+  id: serial("id").primaryKey(),
+  productName: text("product_name").notNull().unique(),
+  steps: jsonb("steps").$type<string[]>().notNull().default([]),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
 export type User = typeof users.$inferSelect;
 export type Sheet = typeof sheets.$inferSelect;
 export type Product = typeof products.$inferSelect;
@@ -170,3 +186,4 @@ export type RecipeItem = typeof recipeItems.$inferSelect;
 export type Order = typeof orders.$inferSelect;
 export type OrderItem = typeof orderItems.$inferSelect;
 export type Expense = typeof expenses.$inferSelect;
+export type PrepStep = typeof prepSteps.$inferSelect;

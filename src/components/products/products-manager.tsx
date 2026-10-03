@@ -6,6 +6,8 @@ import { toast } from "sonner";
 
 import { saveRecipe, updateProduct } from "@/app/(app)/products/actions";
 import { Button } from "@/components/ui/button";
+import { NewProductDialog } from "@/components/products/new-product-dialog";
+import { PrepStepsDialog } from "@/components/products/prep-steps-dialog";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -32,7 +34,7 @@ export type CatalogRef = {
 };
 
 type RecipeLine = { key: string; qty: number };
-type Item = Product & { recipe: RecipeLine[] };
+type Item = Product & { recipe: RecipeLine[]; steps: string[] };
 type Group = { category: string; items: Item[] };
 
 /** Catalog in the shapes the rows need, built once for the whole page. */
@@ -64,8 +66,13 @@ export function ProductsManager({
     };
   }, [catalog]);
 
+  // Offered as choices when adding a drink; a new one can still be typed in.
+  const categories = groups.map((g) => g.category);
+
   return (
     <div className="flex flex-col gap-8">
+      <NewProductDialog categories={categories} />
+
       {groups.map((group) => (
         <section key={group.category}>
           <h2 className="mb-2 font-serif text-lg font-semibold">
@@ -212,18 +219,24 @@ function ProductRow({
             </span>
           )}
         </div>
-        <button
-          type="button"
-          onClick={() => setActive((a) => !a)}
-          className={cn(
-            "shrink-0 rounded-full px-2.5 py-1 text-xs font-medium transition-colors",
-            active
-              ? "bg-primary/12 text-primary"
-              : "bg-muted text-muted-foreground",
-          )}
-        >
-          {active ? "Đang bán" : "Đã ẩn"}
-        </button>
+        <div className="flex shrink-0 items-center gap-1.5">
+          <button
+            type="button"
+            onClick={() => setActive((a) => !a)}
+            className={cn(
+              "rounded-full px-2.5 py-1 text-xs font-medium transition-colors",
+              active
+                ? "bg-primary/12 text-primary"
+                : "bg-muted text-muted-foreground",
+            )}
+          >
+            {active ? "Đang bán" : "Đã ẩn"}
+          </button>
+          <PrepStepsDialog
+            productName={product.name}
+            initial={product.steps}
+          />
+        </div>
       </div>
 
       <div className="mt-2.5 flex items-end gap-3">

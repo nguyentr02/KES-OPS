@@ -5,20 +5,30 @@ import {
   type CatalogRef,
 } from "@/components/products/products-manager";
 import { db } from "@/db";
-import { components, ingredients, products, recipeItems } from "@/db/schema";
+import {
+  components,
+  ingredients,
+  prepSteps,
+  products,
+  recipeItems,
+} from "@/db/schema";
 import { loadCostGraph } from "@/lib/costing";
 
 export const dynamic = "force-dynamic";
 
 export default async function ProductsPage() {
   // All independent — one parallel wave instead of five serial round-trips.
-  const [graph, prods, rItems, ings, comps] = await Promise.all([
+  const [graph, prods, rItems, ings, comps, steps] = await Promise.all([
     loadCostGraph(),
     db.select().from(products).orderBy(asc(products.sort)),
     db.select().from(recipeItems),
     db.select().from(ingredients).orderBy(asc(ingredients.sort)),
     db.select().from(components).orderBy(asc(components.sort)),
+    db.select().from(prepSteps),
   ]);
+
+  // Steps are keyed by drink name, so both sizes of a drink read the same row.
+  const stepsByName = new Map(steps.map((s) => [s.productName, s.steps]));
 
   // Everything a recipe line may point at, with the unit cost the editor needs
   // to price a line as you type. `key` is what the <Select> stores.
@@ -56,6 +66,7 @@ export default async function ProductsPage() {
     category: string;
     items: ((typeof prods)[number] & {
       recipe: { key: string; qty: number }[];
+      steps: string[];
     })[];
   }[] = [];
   for (const p of prods) {
@@ -64,7 +75,11 @@ export default async function ProductsPage() {
       g = { category: p.category, items: [] };
       groups.push(g);
     }
-    g.items.push({ ...p, recipe: recipeByProduct.get(p.id) ?? [] });
+    g.items.push({
+      ...p,
+      recipe: recipeByProduct.get(p.id) ?? [],
+      steps: stepsByName.get(p.name) ?? [],
+    });
   }
 
   return (
