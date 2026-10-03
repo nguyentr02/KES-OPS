@@ -14,7 +14,7 @@ const TABS = [
 export function ProductSubTabs() {
   const pathname = usePathname();
   return (
-    <div className="mb-5 flex gap-1 overflow-x-auto border-b border-border/60">
+    <div className="no-scrollbar mb-5 flex gap-1 overflow-x-auto border-b border-border/60">
       {TABS.map((t) => {
         const active =
           t.href === "/products"

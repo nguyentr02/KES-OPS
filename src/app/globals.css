@@ -109,3 +109,13 @@
     @apply font-sans;
   }
 }
+
+/* Hide a scroll container's scrollbar while it still scrolls — for rows that
+   swipe sideways on a narrow screen, where the bar is only visual noise. */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
